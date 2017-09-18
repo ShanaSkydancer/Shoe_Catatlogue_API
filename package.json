@@ -1,0 +1,38 @@
+{
+  "name": "Shoe_Catalogue_API",
+  "version": "1.0.0",
+  "description": "Backend basics Shoe Catalogue API exercise.",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "config.json": "^0.0.4",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.2",
+    "express": "^4.15.4",
+    "express-flash": "^0.0.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.5",
+    "jquery": "^3.2.1",
+    "mocha": "^3.5.0",
+    "mongoose": "^4.11.10",
+    "node": "^8.3.0",
+    "node-modules": "^1.0.1",
+    "node-sass": "^4.5.3",
+    "sass": "^1.0.0-beta.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShanaSkydancer/Shoe_Catalogue_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShanaSkydancer/Shoe_Catalogue_API/issues"
+  },
+  "homepage": "https://github.com/ShanaSkydancer/Shoe_Catalogue_API#readme"
+}
