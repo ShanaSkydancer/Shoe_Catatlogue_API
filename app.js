@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const $ = require("jquery");
 const format = require("util").format;
+const morgan = require('morgan');
 
 var app = express();
 
@@ -22,20 +23,8 @@ app.use(express.static('routes'));
 app.use(express.static('vendors'));
 
 //Connect Mongoose to your .js and have it access the MongoBD
-const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/shoe_catalogue_API";
+const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/shoe_catalogue_api";
 mongoose.connect(mongoURL);
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Connected to the DB!');
-});
-
-  // var workingSchema = new mongoose.Schema({
-  //   waiter: String,
-  //   days: Array
-  // });
-  // const workingModel = mongoose.model('workingModel', workingSchema);
 
 //Port and environment variable
 app.set('port', (process.env.PORT || 3000));
@@ -46,12 +35,32 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 
+//Use Morgan - the logger
+app.use(morgan("dev"));
+
 //Use bodyParser
 var jsonParser = bodyParser.json();
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
+
+//Catch 404 error and forward to error handler
+app.use(function(req, res, next){
+  var err = new Error("Not found");
+  err.status = 404;
+  next(err);
+});
+
+//Error handler
+app.use(function(err, req, res, next){
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message
+    }
+  });
+});
 
 //Use flash for error messages
 app.use(session({
@@ -65,17 +74,24 @@ app.use(session({
 app.use(flash());
 
 //Functions being accessed
-const ShoeRoutes = require("./shoes");
+const Models = require("./models");
+const Routes = require("./routes");
+const ShoesCatalogue = require("./shoesCatalogue");
 
 //Access the function
-const ShoeCatalogueRoutes = ShoeRoutes(Model);
+const models = Models(mongoURL);
+const ShoesRoutes = ShoesCatalogue(models);
+
+app.use('/api/shoes', Routes);
 
 //Using "/" makes it the "index page" i.e. it has no route
-app.get('/', (req, res) => {
-  res.render("index");
-});
+// app.get('/', (req, res) => {
+//   res.render("index");
+// });
+
 
 //Shows the login for admin of waiter to access
+// app.get ('/api/shoes', shoes.home)
 // app.get('/login', waiterAvailabilityRoutes.login);
 // app.get('/waiter/:username', waiterAvailabilityRoutes.waiter);
 // app.get('/admin', waiterAvailabilityRoutes.admin);
