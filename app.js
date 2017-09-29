@@ -23,7 +23,7 @@ app.use(express.static('routes'));
 app.use(express.static('vendors'));
 
 //Connect Mongoose to your .js and have it access the MongoBD
-const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/shoe_catalogue_api";
+const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/shoe-catalogue-api";
 mongoose.connect(mongoURL);
 
 //Port and environment variable
