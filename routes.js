@@ -1,107 +1,75 @@
-'use strict';
+"use strict";
 
-const express = require('express');
-const router = express.Router();
+module.exports = function (models){
 
-//GET request
-router.get("/", function(req, res){
-    res.json({
-        response: "You sent a GET request"
-    });
-});
+    //All shoes
+    const shoeStock = function (req, res, next){
+            models.ShoeModel.find({})
+                .then(function (ShoeModel){
+                    res.json(ShoeModel);
+                })
+                .catch(function (err) {
+                    return next(err);
+                    console.error(err);
+                });
+        };
 
-//POST request
-router.post("/", function(req, res){
-    res.json({
-        response: "You sent a POST request",
-        body: req.body
-    });
-});
+    //Add shoe
+    const newStock = function (req, res, next){
+        var newShoe = new models.ShoeModel(req.body);
+        console.log(newShoe);
 
-//GET request for brand/:brandname
-router.get("/brand/:brandname", function(req, res){
-    res.json({
-        response: "You sent a GET request for brand " + req.params.brandname
-    });
-});
+        newShoe.save().then(function (shoe) {
+                res.status(201);
+                res.json(shoe);
+            })
+            .catch(function (err) {
+                //if (err) return next(err);
+                console.error(err)
+            });
+    };
 
-//GET request for /size/:size
-router.get("/size/:size", function(req, res){
-    res.json({
-        response: "You sent a GET request for brand " + req.params.size
-    });
-});
+    const filterBrand = function (req, res, next){
+    
+        ShoeSchema.methods.findSameBrand = function(callback){
+            return this.model("ShoeModel").find({brand : this.brand}, callback);
+        }
+    };
+    
+    const filterColor= function (req, res, next){
+        
+        ShoeSchema.methods.findSameColor = function(callback){
+            return this.model("ShoeModel").find({color : this.color}, callback);
+        }
+    };
 
-//GET request for /brand/:brandname/size/:size
-router.get("/brand/:brandname/size/:size", function(req, res){
-    res.json({
-        response: "You sent a GET request for brand " + req.params.brandname + "and size " + req.params.size
-    });
-});
+    const filterSize = function (req, res, next){
+        
+        ShoeSchema.methods.findSameSize = function(callback){
+            return this.model("ShoeModel").find({size : this.size}, callback);
+        }
+    
+    };
 
-//PUT request
-//Edit a shoe brand
-router.put("/brand/:brandname", function(req, res){
-    res.json({
-        response: "You sent a PUT request for brand",
-        brandID: req.params.brand,
-        body: req.body
-    });
-});
+    const remove = (req, res, next) => {
+        // let resetButton = req.body.resetButton;
 
-//PUT request
-//Edit a shoe size
-router.put("/size/:size", function(req, res){
-    res.json({
-        response: "You sent a PUT request for size",
-        sizeID: req.params.size,
-        body: req.body
-    });
-});
+        ShoeModel.remove({}, function(err, removed){
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('Data has been deleted!')
+            res.redirect('/api/shoes');
+            }
+        });
+    }
 
-//PUT request
-//Edit a shoe color
-router.put("/color/:color", function(req, res){
-    res.json({
-        response: "You sent a PUT request for color",
-        colorID: req.params.color,
-        body: req.body
-    });
-});
-
-//PUT request
-//Edit a shoe price
-router.put("/price/:price", function(req, res){
-    res.json({
-        response: "You sent a PUT request for price",
-        priceID: req.params.price,
-        body: req.body
-    });
-});
-
-//PUT request
-//Edit a shoe stock
-router.put("/stock/:stock", function(req, res){
-    res.json({
-        response: "You sent a PUT request for stock",
-        stockID: req.params.stock,
-        body: req.body
-    });
-});
-
-router.delete("/brand/:brandname", function(req, res){
-    res.json({
-        response: "You sent a DELETE request for brand",
-        brandID: req.params.brand,
-        body: req.body
-    });
-});
-
-router.post("/size/:size", function(req, res){
-    res.json({
-        response: "You sent a POST request for size",
-        sizeID: req.params.size,
-    });
-})
-
-module.exports = router;
+    return {
+        shoeStock,
+        newStock,
+        filterBrand,
+        filterColor,
+        filterSize,
+        remove
+    }
+};

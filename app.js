@@ -24,7 +24,6 @@ app.use(express.static('vendors'));
 
 //Connect Mongoose to your .js and have it access the MongoBD
 const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/shoe-catalogue-api";
-mongoose.connect(mongoURL);
 
 //Port and environment variable
 app.set('port', (process.env.PORT || 3000));
@@ -46,21 +45,11 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 //Catch 404 error and forward to error handler
-app.use(function(req, res, next){
-  var err = new Error("Not found");
-  err.status = 404;
-  next(err);
-});
-
-//Error handler
-app.use(function(err, req, res, next){
-  res.status(err.status || 500);
-  res.json({
-    error: {
-      message: err.message
-    }
-  });
-});
+// app.use(function(req, res, next){
+//   var err = new Error("Not found");
+//   err.status = 404;
+//   next(err);
+// });
 
 //Use flash for error messages
 app.use(session({
@@ -76,31 +65,30 @@ app.use(flash());
 //Functions being accessed
 const Models = require("./models");
 const Routes = require("./routes");
-const ShoesCatalogue = require("./shoesCatalogue");
 
 //Access the function
 const models = Models(mongoURL);
-const ShoesRoutes = ShoesCatalogue(models);
+const routes = Routes(models);
 
-app.use('/api/shoes', Routes);
+//GET
+app.get('/api/shoes', routes.shoeStock);
+// app.get('/api/shoes/brand/:brandname', routes.filterBrand);
+// app.get('/api/shoes/size/:size', routes.filterSize);
+// app.get('/api/shoes/color/:color', routes.filterColor);
+// app.get('/api/shoes/brand/:brandname/size/:size', routes.filterBrandAndColor);
 
-//Using "/" makes it the "index page" i.e. it has no route
-// app.get('/', (req, res) => {
-//   res.render("index");
+//POST
+app.post('/api/shoes', routes.newStock);
+
+//Error handler
+// app.use(function(err, req, res, next){
+//   res.status(err.status || 500);
+//   res.json({
+//     error: {
+//       message: err.message
+//     }
+//   });
 // });
-
-
-//Shows the login for admin of waiter to access
-// app.get ('/api/shoes', shoes.home)
-// app.get('/login', waiterAvailabilityRoutes.login);
-// app.get('/waiter/:username', waiterAvailabilityRoutes.waiter);
-// app.get('/admin', waiterAvailabilityRoutes.admin);
-//Post data
-// app.post('/login', waiterAvailabilityRoutes.login);
-// app.post('/waiter/:username', waiterAvailabilityRoutes.waiter);
-// app.post('/admin/remove', waiterAvailabilityRoutes.remove);
-
-
 
 //Hosts my server
 var server = app.listen(app.get("port"), () => {
