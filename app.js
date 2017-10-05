@@ -72,13 +72,14 @@ const routes = Routes(models);
 
 //GET
 app.get('/api/shoes', routes.shoeStock);
-// app.get('/api/shoes/brand/:brandname', routes.filterBrand);
-// app.get('/api/shoes/size/:size', routes.filterSize);
-// app.get('/api/shoes/color/:color', routes.filterColor);
-// app.get('/api/shoes/brand/:brandname/size/:size', routes.filterBrandAndColor);
+app.get('/api/shoes/brand/:brandname', routes.filterBrand);
+app.get('/api/shoes/size/:size', routes.filterSize);
+app.get('/api/shoes/color/:color', routes.filterColor);
+app.get('/api/shoes/brand/:brandname/size/:size', routes.filterBrandAndSize);
 
 //POST
 app.post('/api/shoes', routes.newStock);
+app.post('/api/shoes/sold/:id', routes.soldStock);
 
 //Error handler
 // app.use(function(err, req, res, next){

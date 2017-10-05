@@ -8,48 +8,83 @@ module.exports = function (models){
                 .then(function (ShoeModel){
                     res.json(ShoeModel);
                 })
-                .catch(function (err) {
-                    return next(err);
-                    console.error(err);
-                });
         };
 
     //Add shoe
     const newStock = function (req, res, next){
         var newShoe = new models.ShoeModel(req.body);
-        console.log(newShoe);
 
         newShoe.save().then(function (shoe) {
-                res.status(201);
-                res.json(shoe);
+            res.status(201);
+            res.json(shoe);
             })
-            .catch(function (err) {
+            // .catch(function (err) {
                 //if (err) return next(err);
-                console.error(err)
-            });
+            //     console.error(err)
+            // });
     };
 
-    const filterBrand = function (req, res, next){
-    
-        ShoeSchema.methods.findSameBrand = function(callback){
-            return this.model("ShoeModel").find({brand : this.brand}, callback);
-        }
+    // /api/shoes/brand/:brandname	
+    const filterBrand = (req, res, next) => {
+        const brandname = req.params.brandname;
+        
+            models.ShoeModel
+                .find({ brand : brandname })
+                .then(function (shoes) {
+                    res.json(shoes);
+                })
     };
     
-    const filterColor= function (req, res, next){
+    // /api/shoes/size/:size	
+    const filterSize = (req, res, next) => {
+        const size = req.params.size;
         
-        ShoeSchema.methods.findSameColor = function(callback){
-            return this.model("ShoeModel").find({color : this.color}, callback);
-        }
+        models.ShoeModel
+        .find({ size : size })
+        .then(function (shoes) {
+            res.json(shoes);
+        })
+        
+    };
+    
+    // /api/shoes/color/:color
+    const filterColor= (req, res, next) => {
+        const color = req.params.color;
+        
+            models.ShoeModel
+                .find({ color : color })
+                .then(function (shoes) {
+                    res.json(shoes);
+                })
     };
 
-    const filterSize = function (req, res, next){
+    // /api/shoes/brand/:brandname/size/:size	
+    const filterBrandAndSize = (req, res, next) => {
+        const size = req.params.size;
         
-        ShoeSchema.methods.findSameSize = function(callback){
-            return this.model("ShoeModel").find({size : this.size}, callback);
-        }
-    
-    };
+            models.ShoeModel
+                .find({ brand : brandname,
+                        size : size
+                })
+                .then(function (shoes) {
+                    res.json(shoes);
+                })
+    }
+
+    // /api/shoes/sold/:id	
+    const soldStock = (req, res, next) => {
+       const shoes = req.body;
+
+        shoes.forEach((shoe) => {
+            models.ShoeModel
+                .update(
+                    { _id : shoe._id },
+                    { $inc : { in_stock : - shoe.qty } })
+                .then(function (result) {
+                    res.json(result);
+                })
+        });
+    }
 
     const remove = (req, res, next) => {
         // let resetButton = req.body.resetButton;
@@ -70,6 +105,8 @@ module.exports = function (models){
         filterBrand,
         filterColor,
         filterSize,
+        filterBrandAndSize,
+        soldStock,
         remove
     }
 };
