@@ -24,6 +24,7 @@ module.exports = function (models){
             // });
     };
 
+    // Filters by brand
     // /api/shoes/brand/:brandname	
     const filterBrand = (req, res, next) => {
         const brandname = req.params.brandname;
@@ -35,6 +36,7 @@ module.exports = function (models){
                 })
     };
     
+    // Filters by size
     // /api/shoes/size/:size	
     const filterSize = (req, res, next) => {
         const size = req.params.size;
@@ -47,6 +49,7 @@ module.exports = function (models){
         
     };
     
+    // Filters by color
     // /api/shoes/color/:color
     const filterColor= (req, res, next) => {
         const color = req.params.color;
@@ -58,6 +61,7 @@ module.exports = function (models){
                 })
     };
 
+    // Filters by brand and size
     // /api/shoes/brand/:brandname/size/:size	
     const filterBrandAndSize = (req, res, next) => {
         const size = req.params.size;
