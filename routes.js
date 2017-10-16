@@ -77,31 +77,32 @@ module.exports = function (models){
 
     // /api/shoes/sold/:id	
     const soldStock = (req, res, next) => {
-       const shoes = req.body;
+       const _id = req.params.id;
 
-        shoes.forEach((shoe) => {
-            models.ShoeModel
-                .update(
-                    { _id : shoe._id },
-                    { $inc : { in_stock : - shoe.qty } })
-                .then(function (result) {
-                    res.json(result);
-                })
-        });
+        models.ShoeModel
+            .update(
+                { _id : _id },
+                { $inc : { in_stock : - 1 } })
+            .then(function (result) {
+                res.json(result);
+            })
     }
 
-    const remove = (req, res, next) => {
-        // let resetButton = req.body.resetButton;
+    //Remove shoe
+    // const remove = (req, res, next) => {
+    //     const currentShoe = e.target.value;        
 
-        ShoeModel.remove({}, function(err, removed){
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('Data has been deleted!')
-            res.redirect('/api/shoes');
-            }
-        });
-    }
+    //     ShoeModel.remove({
+    //         currentShoe
+    //     }, function(err, removed){
+    //     if (err) {
+    //         console.error(err);
+    //     } else {
+    //         console.log('Data has been deleted!')
+    //         // res.redirect('/api/shoes');
+    //         }
+    //     });
+    // }
 
     return {
         shoeStock,
@@ -110,7 +111,7 @@ module.exports = function (models){
         filterColor,
         filterSize,
         filterBrandAndSize,
-        soldStock,
-        remove
+        soldStock
+        // remove
     }
 };

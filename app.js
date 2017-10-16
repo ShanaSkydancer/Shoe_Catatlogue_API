@@ -65,10 +65,14 @@ app.use(flash());
 //Functions being accessed
 const Models = require("./models");
 const Routes = require("./routes");
+const cors = require("./cors");
 
 //Access the function
 const models = Models(mongoURL);
 const routes = Routes(models);
+
+//AJAX request using CORS
+app.use(cors);
 
 //GET
 app.get('/api/shoes', routes.shoeStock);
