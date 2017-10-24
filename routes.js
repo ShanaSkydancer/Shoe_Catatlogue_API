@@ -64,7 +64,7 @@ module.exports = (models) => {
     // Filters by brand and size
     // /api/shoes/brand/:brandname/size/:size	
     const filterBrandAndSize = (req, res, next) => {
-        const brand = req.param.brandname;
+        const brandname = req.param.brandname;
         const size = req.params.size;
         
             models.ShoeModel
