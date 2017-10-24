@@ -44,13 +44,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-//Catch 404 error and forward to error handler
-// app.use(function(req, res, next){
-//   var err = new Error("Not found");
-//   err.status = 404;
-//   next(err);
-// });
-
 //Use flash for error messages
 app.use(session({
   secret: 'keyboard cat',
@@ -66,6 +59,7 @@ app.use(flash());
 const Models = require("./models");
 const Routes = require("./routes");
 const cors = require("./cors");
+const errorHandler = require("./error-handler");
 
 //Access the function
 const models = Models(mongoURL);
@@ -86,14 +80,7 @@ app.post('/api/shoes', routes.newStock);
 app.post('/api/shoes/sold/:id', routes.soldStock);
 
 //Error handler
-// app.use(function(err, req, res, next){
-//   res.status(err.status || 500);
-//   res.json({
-//     error: {
-//       message: err.message
-//     }
-//   });
-// });
+errorHandler(app);
 
 //Hosts my server
 var server = app.listen(app.get("port"), () => {

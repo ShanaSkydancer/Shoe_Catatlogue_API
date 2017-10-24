@@ -1,27 +1,27 @@
 "use strict";
 
-module.exports = function (models){
+module.exports = (models) => {
 
     //All shoes
-    const shoeStock = function (req, res, next){
+    const shoeStock = (req, res, next) => {
             models.ShoeModel.find({})
-                .then(function (ShoeModel){
+                .then((ShoeModel) => {
                     res.json(ShoeModel);
                 })
         };
 
     //Add shoe
-    const newStock = function (req, res, next){
+    const newStock = (req, res, next) => {
         var newShoe = new models.ShoeModel(req.body);
 
-        newShoe.save().then(function (shoe) {
+        newShoe.save().then((shoe) => {
             res.status(201);
             res.json(shoe);
             })
-            // .catch(function (err) {
-                //if (err) return next(err);
-            //     console.error(err)
-            // });
+            .catch((err) => {
+                if (err) return next(err);
+                console.error(err)
+            });
     };
 
     // Filters by brand
@@ -31,7 +31,7 @@ module.exports = function (models){
         
             models.ShoeModel
                 .find({ brand : brandname })
-                .then(function (shoes) {
+                .then((shoes) => {
                     res.json(shoes);
                 })
     };
@@ -42,10 +42,10 @@ module.exports = function (models){
         const size = req.params.size;
         
         models.ShoeModel
-        .find({ size : size })
-        .then(function (shoes) {
-            res.json(shoes);
-        })
+            .find({ size : size })
+            .then((shoes) => {
+                res.json(shoes);
+            })
         
     };
     
@@ -56,7 +56,7 @@ module.exports = function (models){
         
             models.ShoeModel
                 .find({ color : color })
-                .then(function (shoes) {
+                .then((shoes) => {
                     res.json(shoes);
                 })
     };
@@ -75,6 +75,7 @@ module.exports = function (models){
                     res.json(shoes);
                 })
                 .catch((err) => {
+                    console.error(err)
                     return next(err);
                 });
     };
@@ -87,26 +88,10 @@ module.exports = function (models){
             .update(
                 { _id : _id },
                 { $inc : { in_stock : - 1 } })
-            .then(function (result) {
+            .then((result) => {
                 res.json(result);
             })
     }
-
-    //Remove shoe
-    // const remove = (req, res, next) => {
-    //     const currentShoe = e.target.value;        
-
-    //     ShoeModel.remove({
-    //         currentShoe
-    //     }, function(err, removed){
-    //     if (err) {
-    //         console.error(err);
-    //     } else {
-    //         console.log('Data has been deleted!')
-    //         // res.redirect('/api/shoes');
-    //         }
-    //     });
-    // }
 
     return {
         shoeStock,
@@ -116,6 +101,5 @@ module.exports = function (models){
         filterSize,
         filterBrandAndSize,
         soldStock
-        // remove
     }
 };
