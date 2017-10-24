@@ -64,12 +64,13 @@ module.exports = (models) => {
     // Filters by brand and size
     // /api/shoes/brand/:brandname/size/:size	
     const filterBrandAndSize = (req, res, next) => {
-        const brandname = req.param.brandname;
+        const brandname = req.params.brandname;
         const size = req.params.size;
         
             models.ShoeModel
-                .find({ brand : brandname,
-                        size : size
+                .find({ 
+                    brand : brandname,
+                    size : size
                 })
                 .then((shoes) => {
                     res.json(shoes);
