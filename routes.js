@@ -71,10 +71,13 @@ module.exports = function (models){
                 .find({ brand : brandname,
                         size : size
                 })
-                .then(function (shoes) {
+                .then((shoes) => {
                     res.json(shoes);
                 })
-    }
+                .catch((err) => {
+                    return next(err);
+                });
+    };
 
     // /api/shoes/sold/:id	
     const soldStock = (req, res, next) => {
